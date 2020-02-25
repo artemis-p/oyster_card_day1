@@ -12,11 +12,6 @@ describe OysterCard do
   it 'throws an error when exceeding max balance' do
     expect { OysterCard.new.top_up(OysterCard::MAX_BALANCE + 1) }.to(raise_error("Exceeded maximum balance of £#{OysterCard::MAX_BALANCE}"))
   end
-  it 'deducts balance from card' do
-    subject.top_up(15)
-    subject.deduct(5)
-    expect { subject.deduct(5) }.to(change { subject.balance }.by(-5))
-  end
 
   describe 'journeys' do
     before(:each) do
@@ -30,6 +25,9 @@ describe OysterCard do
         @card.touch_in
         @card.touch_out
         expect(@card).not_to be_in_journey
+      end
+      it 'reduces balance on check out by minimum fare' do
+        expect {subject.touch_out}.to change{subject.balance}.by(-1)
       end
   end
 end
