@@ -18,4 +18,16 @@ describe OysterCard do
     subject.deduct(5)
     expect { subject.deduct(5) }.to(change { subject.balance }.by(-5))
   end
+  context '#in_use' do
+    it 'in_journey to be true after the card has been touched in' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+    it 'in_journey to be false after the card has been touched out' do
+      subject.touch_in
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
+  end
+
 end
