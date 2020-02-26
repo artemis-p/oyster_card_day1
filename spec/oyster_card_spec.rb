@@ -2,7 +2,8 @@ require 'oyster_card'
 
 describe OysterCard do
   let(:station){double :station} 
-  it { is_expected.to(respond_to(:balance, :top_up)) }
+  let(:station_two){double :station_two} 
+  it { is_expected.to(respond_to(:balance, :top_up, :store_journey)) }
   it 'has default balance of 0' do
     expect(subject.balance).to(eq(0))
   end
@@ -24,13 +25,15 @@ describe OysterCard do
       end
       it 'in_journey to be false after the card has been touched out' do
         @card.touch_in(station)
-        @card.touch_out
+        @card.touch_out(station)
         expect(@card.in_journey).to eq false
       end
       it 'reduces balance on check out by minimum fare' do
-        expect {subject.touch_out}.to change{subject.balance}.by(-1)
+        @card.touch_in(station)
+        expect {@card.touch_out(station)}.to change{@card.balance}.by(-1)
       end
     end
+
   describe 'storing journeys' do
     before(:each) do
       @card = OysterCard.new(50)
@@ -39,5 +42,20 @@ describe OysterCard do
         @card.touch_in(station)
         expect(@card.origin_station).to eq station
      end 
+     it 'tests journey to have attributes' do
+       expect(subject).to have_attributes(journey: [])
+    end
+    it 'journey will store exit_station' do
+      expect(subject).to have_attributes(exit_station: nil)
+    end
+    it 'journey will store exit station' do 
+      @card.touch_out(station)
+      expect(@card.exit_station).to eq station
+   end 
+   it 'store journey will record journey into journey array' do
+    @card.touch_in(station)
+    @card.touch_out(station_two)
+    expect(@card.journey).to include({origin_station: station, exit_station: station_two})
+    end
   end
 end
