@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OysterCard
   MAX_BALANCE = 90
   MIN_BALANCE = 1
@@ -6,30 +8,36 @@ class OysterCard
   def initialize(balance = 0)
     @balance = balance
     @origin_station = nil
+    puts 'hello, buddy'
   end
 
   def top_up(amount)
     raise "Exceeded maximum balance of £#{MAX_BALANCE}" if @balance + amount > MAX_BALANCE
+
     @balance += amount
   end
 
-private
+  private
+
   def deduct(amount)
     raise "Not enough money, current balance is £#{@balance}" if @balance - amount < 0
+
     @balance -= amount
   end
 
-public
+  public
+
   def touch_in(station)
-    raise "Insufficient funds" if @balance < MIN_BALANCE
-   @origin_station = station
+    raise 'Insufficient funds' if @balance < MIN_BALANCE
+
+    @origin_station = station
   end
 
   def in_journey
-    if @origin_station == nil
-      return false
+    if @origin_station.nil?
+      false
     else
-      return true
+      true
     end
   end
 
