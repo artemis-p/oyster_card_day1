@@ -38,24 +38,13 @@ describe OysterCard do
     before(:each) do
       @card = OysterCard.new(50)
     end
-      it 'journeys will store origin station' do 
-        @card.touch_in(station)
-        expect(@card.origin_station).to eq station
-     end 
      it 'tests journey to have attributes' do
-       expect(subject).to have_attributes(journey: [])
+       expect(subject).to have_attributes(journey_history: [])
     end
-    it 'journey will store exit_station' do
-      expect(subject).to have_attributes(exit_station: nil)
-    end
-    it 'journey will store exit station' do 
-      @card.touch_out(station)
-      expect(@card.exit_station).to eq station
-   end 
    it 'store journey will record journey into journey array' do
     @card.touch_in(station)
     @card.touch_out(station_two)
-    expect(@card.journey).to include({origin_station: station, exit_station: station_two})
+    expect(@card.journey_history).to include({origin_station: station, exit_station: station_two})
     end
   end
 end
